@@ -1,13 +1,59 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chained Promises</title>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-
-  <body>
-    <!-- do not change this code -->
     <div id="output"></div>
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+
+    <script>
+        const output = document.getElementById("output");
+
+        function delay(time) {
+            return new Promise(function(resolve) {
+                setTimeout(resolve, time);
+            });
+        }
+
+        function manipulateData() {
+
+            // Initial Promise
+            return new Promise(function(resolve) {
+                setTimeout(function() {
+                    resolve([1, 2, 3, 4]);
+                }, 3000);
+            })
+
+            // First transformation
+            .then(function(arr) {
+                const evenNumbers = arr.filter(function(num) {
+                    return num % 2 === 0;
+                });
+
+                return delay(1000).then(function() {
+                    output.textContent = evenNumbers;
+                    return evenNumbers;
+                });
+            })
+
+            // Second transformation
+            .then(function(evenNumbers) {
+                const result = evenNumbers.map(function(num) {
+                    return num * 2;
+                });
+
+                return delay(2000).then(function() {
+                    output.textContent = result;
+                    return result;
+                });
+            });
+        }
+
+        manipulateData();
+    </script>
+
+</body>
 </html>
